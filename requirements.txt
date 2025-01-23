@@ -33,7 +33,7 @@ pyparsing==3.2.0
 pypiwin32==223
 PySocks==1.7.1
 python-dotenv==1.0.1
-pywin32==308
+# pywin32==308
 requests==2.32.3
 requests-oauthlib==2.0.0
 rsa==4.9
