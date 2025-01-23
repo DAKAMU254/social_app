@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ChatterSphere{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-purple-100 text-gray-800 min-h-screen flex flex-col">
+    <header class="bg-blue-700 text-white py-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">ChatterSphere</h1>
+            <nav class="flex space-x-4 relative">
+                {% if user.is_authenticated %}
+                    <span class="mr-4">Hello, {{ user.username }}</span>
+                    <a href="{% url 'user_followers' user.id %}" class="nav-link">My Followers</a>
+                    <a href="{% url 'user_following' user.id %}" class="nav-link">Following</a>
+                    <a href="{% url 'create_post' %}" class="nav-link">New Post</a>
+                    <a href="{% url 'search_users' %}" class="nav-link">Find Friends</a>
+                    <a href="{% url 'logout' %}" class="nav-link">Sign Out</a>
+                    <div class="relative">
+                        <button onclick="toggleDropdown()" class="nav-link">Manage Posts</button>
+                        <div id="dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
+                            <a href="#" onclick="openDeleteModal()" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">Delete Post</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link">Sign In</a>
+                    <a href="{% url 'signup' %}" class="nav-link">Join Us</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8 flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p>&copy; 2025 ChatterSphere. All rights reserved.</p>
+    </footer>
+
+    <!-- Delete Post Modal -->
+    <div id="deleteModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+        <div class="relative top-1/4 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <h3 class="text-lg font-semibold">Delete Post</h3>
+            <p class="mt-2">Are you sure you want to delete this post?</p>
+            <div class="mt-4 flex justify-end">
+                <button onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                <form id="deletePostForm" method="POST" action="{% url 'delete_post' 0 %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            document.getElementById('dropdown').classList.toggle('hidden');
+        }
+
+        function openDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function setDeletePostUrl(postId) {
+            const form = document.getElementById('deletePostForm');
+            form.action = `{% url 'delete_post' 0 %}`.replace('0', postId);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Join Us{% endblock %}
+
+{% block content %}
+    <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-3xl font-semibold mb-6 text-center text-blue-700">Create Your Account</h2>
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            {{ form.as_p|safe }}
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">Sign Up</button>
+        </form>
+        <p class="text-center mt-6 text-gray-700">
+            Already have an account? 
+            <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Sign In</a>
+        </p>
+    </div>
+{% endblock %}
